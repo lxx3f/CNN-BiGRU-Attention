@@ -25,7 +25,7 @@ class CNN_BiGRU_SPAM():
                  filters=50,
                  kernel_size=3,
                  epochs=3,
-                 ratio_train_test=0.2,
+                 ratio_train_all=0.2,
                  is_printed=True):
         # 评价指标
         self.round_digits = 4  # 小数点后保留位数
@@ -45,7 +45,7 @@ class CNN_BiGRU_SPAM():
         self.batch_size = batch_size
 
         # 训练集占数据集的比例
-        self.ratio_train_test = ratio_train_test
+        self.ratio_train_all = ratio_train_all
         # 数据集
         self.x_train = None
         self.y_train = None
@@ -99,10 +99,10 @@ class CNN_BiGRU_SPAM():
                 else:
                     break
         data_x = tok.texts_to_sequences(data_x)
-        self.x_train = data_x[:int(self.ratio_train_test * len(data_x))]
-        self.y_train = data_y[:int(self.ratio_train_test * len(data_y))]
-        self.x_test = data_x[int(self.ratio_train_test * len(data_x)):]
-        self.y_test = data_y[int(self.ratio_train_test * len(data_y)):]
+        self.x_train = data_x[:int(self.ratio_train_all * len(data_x))]
+        self.y_train = data_y[:int(self.ratio_train_all * len(data_y))]
+        self.x_test = data_x[int(self.ratio_train_all * len(data_x)):]
+        self.y_test = data_y[int(self.ratio_train_all * len(data_y)):]
         if self.is_printed:
             print(self.x_train[:5])
             print(self.y_train[:5])

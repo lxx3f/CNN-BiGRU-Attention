@@ -10,21 +10,9 @@ from keras._tf_keras.keras.preprocessing.text import Tokenizer
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-'''
-max_features = 20000
-# 在此数量的单词之后剪切文本（取最常见的 max_features 个单词）
-max_len = 400
-batch_size = 32
-epochs = 3
-ratio_train_test = 0.5  # 训练集占数据集的比例
-F_beta = 0.1  # 查全率对查准率的相对重要性
-
-
-time_start = time.time()
-'''
-
 
 class LSTM_SPAM():
+
     def __init__(self,
                  max_len=200,
                  max_features=200,
@@ -32,8 +20,7 @@ class LSTM_SPAM():
                  embedding_dims=50,
                  epochs=30,
                  ratio_train_test=0.2,
-                 is_printed=True
-                 ):
+                 is_printed=True):
         # 评价指标
         self.round_digits = 4  # 小数点后保留位数
         self.accuracy = None
@@ -110,7 +97,8 @@ class LSTM_SPAM():
             print(len(self.x_train), 'train sequences')
             print(len(self.x_test), 'test sequences')
             print('Pad sequences (samples x time)')
-        self.x_train = sequence.pad_sequences(self.x_train, maxlen=self.max_len)
+        self.x_train = sequence.pad_sequences(self.x_train,
+                                              maxlen=self.max_len)
         self.x_test = sequence.pad_sequences(self.x_test, maxlen=self.max_len)
         self.x_train = tf.convert_to_tensor(self.x_train)
         self.y_train = tf.convert_to_tensor(self.y_train)
@@ -125,7 +113,8 @@ class LSTM_SPAM():
             print('Build model...')
         model = Sequential()
         model.add(Embedding(self.max_features, self.embedding_dims))
-        model.add(LSTM(self.embedding_dims, dropout=0.2, recurrent_dropout=0.2))
+        model.add(LSTM(self.embedding_dims, dropout=0.2,
+                       recurrent_dropout=0.2))
         model.add(Dense(1, activation='sigmoid'))
         model.compile(loss='binary_crossentropy',
                       optimizer='adam',
@@ -133,11 +122,13 @@ class LSTM_SPAM():
         if self.is_printed:
             model.summary()
             print('Train...')
-        history = model.fit(self.x_train, self.y_train,
-                            batch_size=self.batch_size,
-                            epochs=self.epochs,
-                            validation_data=[self.x_test, self.y_test],
-                            )
+        history = model.fit(
+            self.x_train,
+            self.y_train,
+            batch_size=self.batch_size,
+            epochs=self.epochs,
+            validation_data=[self.x_test, self.y_test],
+        )
         plt.plot(history.history['accuracy'])
         plt.plot(history.history['val_accuracy'])
         plt.title('LSTM Model accuracy')
@@ -153,11 +144,10 @@ class LSTM_SPAM():
         plt.legend(['Train', 'Test'], loc='upper left')
         plt.show()
         val_loss, self.accuracy, self.precision, self.recall = model.evaluate(
-            self.x_test,
-            self.y_test,
-            batch_size=self.batch_size)
-        self.f_beta = ((1 + self.BETA * self.BETA) * self.precision * self.recall
-                       / ((self.BETA * self.BETA * self.precision) + self.recall))
+            self.x_test, self.y_test, batch_size=self.batch_size)
+        self.f_beta = (
+            (1 + self.BETA * self.BETA) * self.precision * self.recall /
+            ((self.BETA * self.BETA * self.precision) + self.recall))
         self.f_beta = round(self.f_beta, self.round_digits)
         if self.is_printed:
             print('accuracy:{}'.format(self.accuracy))
@@ -168,10 +158,9 @@ class LSTM_SPAM():
 
     def save_to_log(self, filepath="log/log_LSTM.txt"):
         with open(filepath, encoding='utf-8', mode='a') as f:
-            f.write(
-                "{}\t\t{}\t\t{}\t\t{}\t\t{}\t\t{}\n".format(len(self.y_train), len(self.y_test),
-                                                            self.accuracy, self.precision, self.recall,
-                                                            self.f_beta))
+            f.write("{}\t\t{}\t\t{}\t\t{}\t\t{}\t\t{}\n".format(
+                len(self.y_train), len(self.y_test), self.accuracy,
+                self.precision, self.recall, self.f_beta))
 
 
 if __name__ == "__main__":
@@ -179,7 +168,6 @@ if __name__ == "__main__":
     lstm.load_data()
     lstm.train()
     lstm.save_to_log()
-
 '''
 def load_data(rate=1):
     data_dir = './data'

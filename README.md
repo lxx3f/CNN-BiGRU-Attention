@@ -63,9 +63,42 @@ FN(false negatives): 假反例, 实际为正且被预测为反
 `f_beta`: beta为1时是precision和recall的调和平均数（倒数平均数）, = $(1+\beta^2)\cdot \frac{Precision \cdot Recall}{\beta^2\cdot Precision+Recall}$,其中beta越大说明recall的权重越大,在本例中beta设为0.1
 
 # 支持向量机
-SVM(SPAM).py 支持向量机方法
+SVM(SPAM).py 支持向量机
 
 # 深度学习
-CNN(SPAM).py 卷积神经网络方法
 
-LSTM_SPAM.py 
+## embedding
+将每个样本映射为一个`embedding_dim`维的向量；
+embedding的特性是语义相近或相似的文本的向量的空间距离也相近，即向量空间的距离反映了语义空间的距离。
+
+## CNN
+CNN(SPAM).py 卷积神经网络
+
+模型架构: 输入->嵌入层->卷积层->最大池化层->全连接层
+
+输入维度:[200(一个样本的最大词数,不足则填充0),batch_size(128),]
+
+损失函数:$\text{Binary Cross-Entropy} = -\frac{1}{N} \sum_{i=1}^{N} \left[ y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i) \right]$
+
+## LSTM
+LSTM_SPAM.py 长短期记忆网络
+
+传统RNN的缺点：没有长期记忆，梯度消失和梯度爆炸
+
+遗忘门、输入门、输出门
+
+模型架构: 输入->嵌入层->LSTM层->全连接层
+
+## GRU
+GRU_SPAM.py 门控循环单元
+
+更新门（做加法）、重置门（做减法）
+
+模型架构: 输入->嵌入层->GRU层->全连接层
+
+## CNN-BiGRU-Attention
+CNN_BiGRU_Attention.py 
+
+模型架构: 输入->嵌入层->卷积层->双向门控循环单元层->注意力层->全连接层
+
+[attention机制](https://cs.stanford.edu/~diyiy/docs/naacl16.pdf)
